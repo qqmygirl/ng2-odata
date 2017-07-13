@@ -17,16 +17,21 @@ export class ODataConfiguration {
     public keys: KeyConfigs = new KeyConfigs();
     public baseUrl: string = 'http://localhost/odata';
 
+    public getEntityUri(entityKey: string, _typeName: string): string;
+    public getEntityUri(entityKey: string, _typeName: string, alternateKey: string): string;
 
-    public getEntityUri(entityKey: string, _typeName: string) {
-        
+    public getEntityUri(entityKey: string, _typeName: string, alternateKey?: string): string {
+        if(alternateKey != undefined) {            
+            return `${this.baseUrl}/${_typeName}(${alternateKey}='${entityKey}')`;
+        }
+
         // check if string is a GUID (UUID) type
         if (/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(entityKey)) {
-            return this.baseUrl + '/' + _typeName + "(" + entityKey + ")";
+            return this.baseUrl + '/' + _typeName + '(' + entityKey + ')';
         }
 
         if (!/^[0-9]*$/.test(entityKey)) {
-            return this.baseUrl + '/' + _typeName + "('" + entityKey + "')";
+            return this.baseUrl + '/' + _typeName + '(\'' + entityKey + '\')';
         }
 
         return this.baseUrl + '/' + _typeName + '(' + entityKey + ')';

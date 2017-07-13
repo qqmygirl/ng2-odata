@@ -35,8 +35,10 @@ export abstract class ODataOperation<T> {
            });
     }
 
-    protected getEntityUri(entityKey: string): string {
-        return this.config.getEntityUri(entityKey, this._typeName);
+    protected getEntityUri(entityKey: string): string;
+    protected getEntityUri(entityKey: string, keyName: string): string;
+    protected getEntityUri(entityKey: string, keyName?: string): string {
+        return this.config.getEntityUri(entityKey, this._typeName, keyName);
     }
 
     protected getRequestOptions(): RequestOptions {
@@ -96,11 +98,27 @@ export abstract class OperationWithKeyAndEntity<T> extends ODataOperation<T> {
     abstract Exec(...args): Observable<any>;
 }
 
+export abstract class OperationWithAlternateKey<T> extends ODataOperation<T> {
+    constructor(protected _typeName: string,
+        protected config: ODataConfiguration,
+        protected http: Http,
+        protected key: string,
+        protected keyName: string) {
+            super(_typeName, config, http);
+    }
+    abstract Exec(...args): Observable<any>;
+}
+
 
 export class GetOperation<T> extends OperationWithKey<T> {
-
     public Exec(): Observable<T> {
         return super.handleResponse(this.http.get(this.getEntityUri(this.key), this.getRequestOptions()));
+    }
+}
+
+export class GetByAlternateKeyOperation<T> extends OperationWithAlternateKey<T> {
+    public Exec(): Observable<T> {
+        return super.handleResponse(this.http.get(this.getEntityUri(this.key, this.keyName), this.getRequestOptions()));
     }
 }
 
