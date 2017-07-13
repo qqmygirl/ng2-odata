@@ -13,6 +13,7 @@ export declare abstract class ODataOperation<T> {
     protected getParams(): URLSearchParams;
     protected handleResponse(entity: Observable<Response>): Observable<T>;
     protected getEntityUri(entityKey: string): string;
+    protected getEntityUri(entityKey: string, keyName: string): string;
     protected getRequestOptions(): RequestOptions;
     abstract Exec(...args: any[]): Observable<any>;
     protected parseStringOrStringArray(input: string | string[]): string;
@@ -43,6 +44,18 @@ export declare abstract class OperationWithKeyAndEntity<T> extends ODataOperatio
     constructor(_typeName: string, config: ODataConfiguration, http: Http, key: string, entity: T);
     abstract Exec(...args: any[]): Observable<any>;
 }
+export declare abstract class OperationWithAlternateKey<T> extends ODataOperation<T> {
+    protected _typeName: string;
+    protected config: ODataConfiguration;
+    protected http: Http;
+    protected key: string;
+    protected keyName: string;
+    constructor(_typeName: string, config: ODataConfiguration, http: Http, key: string, keyName: string);
+    abstract Exec(...args: any[]): Observable<any>;
+}
 export declare class GetOperation<T> extends OperationWithKey<T> {
+    Exec(): Observable<T>;
+}
+export declare class GetByAlternateKeyOperation<T> extends OperationWithAlternateKey<T> {
     Exec(): Observable<T>;
 }

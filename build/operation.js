@@ -31,8 +31,8 @@ class ODataOperation {
             return rx_1.Observable.throw(err);
         });
     }
-    getEntityUri(entityKey) {
-        return this.config.getEntityUri(entityKey, this._typeName);
+    getEntityUri(entityKey, keyName) {
+        return this.config.getEntityUri(entityKey, this._typeName, keyName);
     }
     getRequestOptions() {
         let options = this.config.requestOptions;
@@ -86,12 +86,29 @@ class OperationWithKeyAndEntity extends ODataOperation {
     }
 }
 exports.OperationWithKeyAndEntity = OperationWithKeyAndEntity;
+class OperationWithAlternateKey extends ODataOperation {
+    constructor(_typeName, config, http, key, keyName) {
+        super(_typeName, config, http);
+        this._typeName = _typeName;
+        this.config = config;
+        this.http = http;
+        this.key = key;
+        this.keyName = keyName;
+    }
+}
+exports.OperationWithAlternateKey = OperationWithAlternateKey;
 class GetOperation extends OperationWithKey {
     Exec() {
         return super.handleResponse(this.http.get(this.getEntityUri(this.key), this.getRequestOptions()));
     }
 }
 exports.GetOperation = GetOperation;
+class GetByAlternateKeyOperation extends OperationWithAlternateKey {
+    Exec() {
+        return super.handleResponse(this.http.get(this.getEntityUri(this.key, this.keyName), this.getRequestOptions()));
+    }
+}
+exports.GetByAlternateKeyOperation = GetByAlternateKeyOperation;
 // export class PostOperation<T> extends OperationWithEntity<T>{
 //     public Exec():Observable<T>{    //ToDo: Check ODataV4
 //         let body = JSON.stringify(this.entity);
