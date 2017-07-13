@@ -1,6 +1,6 @@
-# angular2-odata
+# ng2-odata
 
-It is fork from the original project (https://github.com/gallayl/angular2-odata)
+It is fork from the original project (https://github.com/gallayl/ng2-odata)
 
 -----------------
 The goal is to create a fluent API for querying, creating, updating and deleting OData resources in Angular2.
@@ -10,10 +10,10 @@ If you are using OData with Angular>2 please check also my other related project
 
 ##Usage example:
 Get the package from NPM:
-npm install angular2-odata
+npm install ng2-odata
 
 ```
-import { ODataConfiguration, ODataServiceFactory, ODataService } from "angular2-odata";
+import { ODataConfiguration, ODataServiceFactory, ODataService } from "ng2-odata";
 import { bootstrap } from "angular2/platform/browser";
     
 @Injectable()

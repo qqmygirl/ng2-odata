@@ -1,6 +1,6 @@
 {
-  "name": "angular2-odata",
-  "version": "0.0.23",
+  "name": "ng2-odata",
+  "version": "0.0.1",
   "description": "OData service for Angular2",
   "main": "./build/index.js",
   "typings": "./build/index.d.ts",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gallayl/angular2-odata.git"
+    "url": "git+https://github.com/romap0/ng2-odata.git"
   },
   "keywords": [
     "odata",
@@ -25,12 +25,12 @@
     "api",
     "service"
   ],
-  "author": "Gallay Lajos",
+  "author": "Roman Pavlov",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gallayl/angular2-odata/issues"
+    "url": "https://github.com/romap0/ng2-odata/issues"
   },
-  "homepage": "https://github.com/gallayl/angular2-odata#readme",
+  "homepage": "https://github.com/romap0/ng2-odata#readme",
   "dependencies": {},
   "devDependencies": {
     "@angular/common": "2.1.0",
