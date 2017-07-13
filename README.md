@@ -1,4 +1,8 @@
 # angular2-odata
+
+It is fork from the original project (https://github.com/gallayl/angular2-odata)
+
+-----------------
 The goal is to create a fluent API for querying, creating, updating and deleting OData resources in Angular2.
 OData service for Angular.
 
