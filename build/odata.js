@@ -14,6 +14,9 @@ class ODataService {
     Get(key) {
         return new operation_1.GetOperation(this._typeName, this.config, this.http, key);
     }
+    GetByAlternateKey(key, keyName) {
+        return new operation_1.GetByAlternateKeyOperation(this._typeName, this.config, this.http, key, keyName);
+    }
     Post(entity) {
         let body = JSON.stringify(entity);
         return this.handleResponse(this.http.post(this.config.baseUrl + '/' + this.TypeName, body, this.config.postRequestOptions));

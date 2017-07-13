@@ -2,7 +2,7 @@ import { URLSearchParams, Http, Response, Headers, RequestOptions } from '@angul
 import { Observable, Operator } from 'rxjs/rx';
 import { ODataConfiguration } from './config';
 import { ODataQuery } from './query';
-import { GetOperation } from './operation';
+import { GetOperation, GetByAlternateKeyOperation } from './operation';
 
 export class ODataService<T> {
 
@@ -14,6 +14,10 @@ export class ODataService<T> {
 
     public Get(key: string): GetOperation<T> {
         return new GetOperation<T>(this._typeName, this.config, this.http, key);
+    }
+
+    public GetByAlternateKey(key: string, keyName: string): GetByAlternateKeyOperation<T> {
+        return new GetByAlternateKeyOperation<T>(this._typeName, this.config, this.http, key, keyName);
     }
 
     public Post(entity: T): Observable<T> {
