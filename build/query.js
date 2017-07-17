@@ -8,6 +8,11 @@ class ODataQuery extends operation_1.ODataOperation {
     constructor(_typeName, config, http) {
         super(_typeName, config, http);
     }
+    getRequestOptions() {
+        let options = this.config.requestOptions;
+        options.search = this.getQueryParams();
+        return options;
+    }
     Filter(filter) {
         this._filter = filter;
         return this;
@@ -27,7 +32,6 @@ class ODataQuery extends operation_1.ODataOperation {
         return this;
     }
     Exec() {
-        let params = this.getQueryParams();
         let config = this.config;
         return this.http.get(this.buildResourceURL(), { search: params })
             .map(res => this.extractArrayData(res, config))

@@ -1,4 +1,4 @@
-import { Http } from '@angular/http';
+import { Http, RequestOptions } from '@angular/http';
 import { Observable } from 'rxjs/rx';
 import { ODataConfiguration } from './config';
 import { ODataOperation } from './operation';
@@ -12,6 +12,7 @@ export declare class ODataQuery<T> extends ODataOperation<T> {
     private _skip;
     private _orderBy;
     constructor(_typeName: string, config: ODataConfiguration, http: Http);
+    protected getRequestOptions(): RequestOptions;
     Filter(filter: string): ODataQuery<T>;
     Top(top: number): ODataQuery<T>;
     Skip(skip: number): ODataQuery<T>;

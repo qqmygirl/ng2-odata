@@ -1,4 +1,4 @@
-import { URLSearchParams, Http, Response } from '@angular/http';
+import { URLSearchParams, Http, Response, RequestOptions } from '@angular/http';
 import { Observable, Operator, Subject } from 'rxjs/rx';
 import { ODataConfiguration } from './config';
 import { ODataOperation } from './operation';
@@ -16,6 +16,12 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     constructor(_typeName: string, config: ODataConfiguration, http: Http) {
         super(_typeName, config, http);
+    }
+    
+    protected getRequestOptions(): RequestOptions {
+        let options = this.config.requestOptions;
+        options.search = this.getQueryParams();
+        return options;
     }
 
     public Filter(filter: string): ODataQuery<T> {
@@ -39,7 +45,6 @@ export class ODataQuery<T> extends ODataOperation<T> {
     }
 
     public Exec(): Observable<Array<T>> {
-        let params = this.getQueryParams();
         let config = this.config;
         return this.http.get(this.buildResourceURL(), { search: params })
             .map(res => this.extractArrayData(res, config))
