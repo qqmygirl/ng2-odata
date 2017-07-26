@@ -11,6 +11,7 @@ export declare class KeyConfigs {
 export declare class ODataConfiguration {
     keys: KeyConfigs;
     baseUrl: string;
+    getEntityUri(_typeName: string): string;
     getEntityUri(entityKey: string, _typeName: string): string;
     getEntityUri(entityKey: string, _typeName: string, alternateKey: string): string;
     handleError(err: any, caught: any): void;

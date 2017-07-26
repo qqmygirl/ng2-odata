@@ -12,12 +12,15 @@ export declare class ODataService<T> {
     Get(key: string): GetOperation<T>;
     GetByAlternateKey(key: string, keyName: string): GetByAlternateKeyOperation<T>;
     Post(entity: T): Observable<T>;
-    CustomAction(key: string, actionName: string, postdata: any): Observable<any>;
-    CustomFunction(key: string, actionName: string): Observable<any>;
+    CustomFunction(actionName: string): Observable<any>;
+    CustomFunction(actionName: string, postdata: any): Observable<any>;
+    CustomFunction(actionName: string, key: string): Observable<any>;
+    CustomFunction(actionName: string, key: string, postdata: any): Observable<any>;
     Patch(entity: any, key: string): Observable<Response>;
     Put(entity: T, key: string): Observable<T>;
     Delete(key: string): Observable<Response>;
     Query(): ODataQuery<T>;
+    protected getEntityUri(): string;
     protected getEntityUri(entityKey: string): string;
     protected handleResponse(entity: Observable<Response>): Observable<T>;
     private extractData(res);

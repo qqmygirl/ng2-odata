@@ -21,12 +21,13 @@ class ODataService {
         let body = JSON.stringify(entity);
         return this.handleResponse(this.http.post(this.config.baseUrl + '/' + this.TypeName, body, this.config.postRequestOptions));
     }
-    CustomAction(key, actionName, postdata) {
-        let body = JSON.stringify(postdata);
-        return this.http.post(this.getEntityUri(key) + '/' + actionName, body, this.config.requestOptions).map(resp => resp.json());
-    }
-    CustomFunction(key, actionName) {
-        return this.http.get(this.getEntityUri(key) + '/' + actionName, this.config.requestOptions).map(resp => resp.json());
+    CustomFunction(actionName, key, postdata) {
+        let url = this.getEntityUri(key) + '/' + actionName;
+        if (postdata != undefined) {
+            let body = JSON.stringify(postdata);
+            return this.http.post(url, body, this.config.requestOptions).map(resp => resp.json());
+        }
+        return this.http.get(url, this.config.requestOptions).map(resp => resp.json());
     }
     Patch(entity, key) {
         let body = JSON.stringify(entity);

@@ -28,30 +28,40 @@ let ODataConfiguration = class ODataConfiguration {
         this.keys = new KeyConfigs();
         this.baseUrl = 'http://localhost/odata';
     }
-    getEntityUri(entityKey, _typeName, alternateKey) {
+    getEntityUri(_typeName, entityKey, alternateKey) {
+        let uri = this.baseUrl + '/' + _typeName;
         if (alternateKey != undefined) {
-            return `${this.baseUrl}/${_typeName}(${alternateKey}='${entityKey}')`;
+            return uri + `(${alternateKey}='${entityKey}')`;
         }
-        // check if string is a GUID (UUID) type
-        if (/^[{(]?[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$/i.test(entityKey)) {
-            return this.baseUrl + '/' + _typeName + '(' + entityKey + ')';
+        if (entityKey != undefined) {
+            // check if string is a GUID (UUID) type
+            if (/^[{(]?[0-9A-F]{8}[-]?([0-9A-F]{4}[-]?){3}[0-9A-F]{12}[)}]?$/i.test(entityKey)) {
+                return uri + '(' + entityKey + ')';
+            }
+            if (!/^[0-9]*$/.test(entityKey)) {
+                return uri + '(\'' + entityKey + '\')';
+            }
+            return uri + '(' + entityKey + ')';
         }
-        if (!/^[0-9]*$/.test(entityKey)) {
-            return this.baseUrl + '/' + _typeName + '(\'' + entityKey + '\')';
-        }
-        return this.baseUrl + '/' + _typeName + '(' + entityKey + ')';
+        return uri;
     }
     handleError(err, caught) {
         console.warn('OData error: ', err, caught);
     }
     ;
     get requestOptions() {
-        return new http_1.RequestOptions({ body: '' });
+        return new http_1.RequestOptions({
+            body: ''
+        });
     }
     ;
     get postRequestOptions() {
-        let headers = new http_1.Headers({ 'Content-Type': 'application/json; charset=utf-8' });
-        return new http_1.RequestOptions({ headers: headers });
+        let headers = new http_1.Headers({
+            'Content-Type': 'application/json; charset=utf-8'
+        });
+        return new http_1.RequestOptions({
+            headers: headers
+        });
     }
     extractQueryResultData(res) {
         if (res.status < 200 || res.status >= 300) {
