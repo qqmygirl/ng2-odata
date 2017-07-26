@@ -44,7 +44,7 @@ class ODataService {
         return new query_1.ODataQuery(this.TypeName, this.config, this.http);
     }
     getEntityUri(entityKey) {
-        return this.config.getEntityUri(entityKey, this._typeName);
+        return this.config.getEntityUri(this._typeName, entityKey);
     }
     handleResponse(entity) {
         return entity.map(this.extractData)

@@ -26,9 +26,9 @@ export class ODataConfiguration {
     public baseUrl: string = 'http://localhost/odata';
 
     public getEntityUri(_typeName: string): string;
-    public getEntityUri(entityKey: string, _typeName: string): string;
-    public getEntityUri(entityKey: string, _typeName: string, alternateKey: string): string;
-    public getEntityUri(_typeName: string, entityKey ? : string, alternateKey ? : string): string {
+    public getEntityUri(_typeName: string, entityKey: string): string;
+    public getEntityUri(_typeName: string, entityKey: string, alternateKey: string): string;
+    public getEntityUri(_typeName: string, entityKey? : string, alternateKey? : string): string {
         let uri = this.baseUrl + '/' + _typeName;
 
         if (alternateKey != undefined) {
@@ -70,8 +70,8 @@ export class ODataConfiguration {
         });
     }
 
-    public extractQueryResultData < T > (res: Response): T[] {
-        if (res.status < 200 || res.status >= 300) {
+    public extractQueryResultData <T> (res: Response): T[] {
+        if (res.status <200 || res.status>= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
         let body = res.json();
@@ -79,10 +79,10 @@ export class ODataConfiguration {
         return entities;
     }
 
-    public extractQueryResultDataWithCount < T > (res: Response): PagedResult < T > {
-        let pagedResult = new PagedResult < T > ();
+    public extractQueryResultDataWithCount <T> (res: Response): PagedResult <T> {
+        let pagedResult = new PagedResult <T> ();
 
-        if (res.status < 200 || res.status >= 300) {
+        if (res.status <200 || res.status>= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
         let body = res.json();

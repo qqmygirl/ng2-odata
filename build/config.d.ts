@@ -12,8 +12,8 @@ export declare class ODataConfiguration {
     keys: KeyConfigs;
     baseUrl: string;
     getEntityUri(_typeName: string): string;
-    getEntityUri(entityKey: string, _typeName: string): string;
-    getEntityUri(entityKey: string, _typeName: string, alternateKey: string): string;
+    getEntityUri(_typeName: string, entityKey: string): string;
+    getEntityUri(_typeName: string, entityKey: string, alternateKey: string): string;
     handleError(err: any, caught: any): void;
     readonly requestOptions: RequestOptions;
     readonly postRequestOptions: RequestOptions;

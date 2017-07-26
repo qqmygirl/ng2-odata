@@ -32,7 +32,7 @@ class ODataOperation {
         });
     }
     getEntityUri(entityKey, keyName) {
-        return this.config.getEntityUri(entityKey, this._typeName, keyName);
+        return this.config.getEntityUri(this._typeName, entityKey, keyName);
     }
     getRequestOptions() {
         let options = this.config.requestOptions;

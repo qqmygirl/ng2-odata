@@ -38,7 +38,7 @@ export abstract class ODataOperation<T> {
     protected getEntityUri(entityKey: string): string;
     protected getEntityUri(entityKey: string, keyName: string): string;
     protected getEntityUri(entityKey: string, keyName?: string): string {
-        return this.config.getEntityUri(entityKey, this._typeName, keyName);
+        return this.config.getEntityUri(this._typeName, entityKey, keyName);
     }
 
     protected getRequestOptions(): RequestOptions {

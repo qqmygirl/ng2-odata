@@ -75,8 +75,8 @@ export class ODataService <T> {
 
     protected getEntityUri(): string;
     protected getEntityUri(entityKey: string): string;
-    protected getEntityUri(entityKey ? : string): string {
-        return this.config.getEntityUri(entityKey, this._typeName);
+    protected getEntityUri(entityKey?: string): string {
+        return this.config.getEntityUri(this._typeName, entityKey);
     }
 
     protected handleResponse(entity: Observable <Response> ): Observable <T> {
