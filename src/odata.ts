@@ -42,10 +42,9 @@ export class ODataService <T> {
     }
 
     public CustomFunction(actionName: string): Observable <any> ;
-    public CustomFunction(actionName: string, postdata: any): Observable <any> ;
     public CustomFunction(actionName: string, key: string): Observable <any> ;
     public CustomFunction(actionName: string, key: string, postdata: any): Observable <any> ;
-    public CustomFunction(actionName: string, key ? : string, postdata ? : any): Observable <any> {
+    public CustomFunction(actionName: string, key? : string, postdata? : any): Observable <any> {
         let url = this.getEntityUri(key) + '/' + actionName;
 
         if (postdata != undefined) {
