@@ -8,7 +8,7 @@ import {
 import {
     Observable,
     Operator
-} from 'rxjs/rx';
+} from 'rxjs/Rx';
 import {
     ODataConfiguration
 } from './config';
