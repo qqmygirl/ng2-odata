@@ -6,12 +6,12 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var http_1 = require("@angular/http");
-var query_1 = require("./query");
+const core_1 = require("@angular/core");
+const http_1 = require("@angular/http");
+const query_1 = require("./query");
 // import { Location } from '@angular/common';
-var KeyConfigs = (function () {
-    function KeyConfigs() {
+class KeyConfigs {
+    constructor() {
         this.filter = '$filter';
         this.top = '$top';
         this.skip = '$skip';
@@ -19,18 +19,17 @@ var KeyConfigs = (function () {
         this.select = '$select';
         this.expand = '$expand';
     }
-    return KeyConfigs;
-}());
+}
 exports.KeyConfigs = KeyConfigs;
-var ODataConfiguration = (function () {
-    function ODataConfiguration() {
+let ODataConfiguration = class ODataConfiguration {
+    constructor() {
         this.keys = new KeyConfigs();
         this.baseUrl = 'http://localhost/odata';
     }
-    ODataConfiguration.prototype.getEntityUri = function (_typeName, entityKey, alternateKey) {
-        var uri = this.baseUrl + '/' + _typeName;
+    getEntityUri(_typeName, entityKey, alternateKey) {
+        let uri = this.baseUrl + '/' + _typeName;
         if (alternateKey != undefined) {
-            return uri + ("(" + alternateKey + "='" + entityKey + "')");
+            return uri + `(${alternateKey}='${entityKey}')`;
         }
         if (entityKey != undefined) {
             // check if string is a GUID (UUID) type
@@ -43,51 +42,43 @@ var ODataConfiguration = (function () {
             return uri + '(' + entityKey + ')';
         }
         return uri;
-    };
-    ODataConfiguration.prototype.handleError = function (err, caught) {
+    }
+    handleError(err, caught) {
         console.warn('OData error: ', err, caught);
-    };
+    }
     ;
-    Object.defineProperty(ODataConfiguration.prototype, "requestOptions", {
-        get: function () {
-            return new http_1.RequestOptions({
-                body: ''
-            });
-        },
-        enumerable: true,
-        configurable: true
-    });
+    get requestOptions() {
+        return new http_1.RequestOptions({
+            body: ''
+        });
+    }
     ;
-    Object.defineProperty(ODataConfiguration.prototype, "postRequestOptions", {
-        get: function () {
-            var headers = new http_1.Headers({
-                'Content-Type': 'application/json; charset=utf-8'
-            });
-            return new http_1.RequestOptions({
-                headers: headers
-            });
-        },
-        enumerable: true,
-        configurable: true
-    });
-    ODataConfiguration.prototype.extractQueryResultData = function (res) {
+    get postRequestOptions() {
+        let headers = new http_1.Headers({
+            'Content-Type': 'application/json; charset=utf-8'
+        });
+        return new http_1.RequestOptions({
+            headers: headers
+        });
+    }
+    extractQueryResultData(res) {
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        var body = res.json();
-        var entities = body.value;
+        let body = res.json();
+        let entities = body.value;
         return entities;
-    };
-    ODataConfiguration.prototype.extractQueryResultDataWithCount = function (res) {
-        var pagedResult = new query_1.PagedResult();
+    }
+    extractQueryResultDataWithCount(res) {
+        let pagedResult = new query_1.PagedResult();
         if (res.status < 200 || res.status >= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        var body = res.json();
-        var entities = body.value;
+        let body = res.json();
+        let entities = body.value;
         pagedResult.data = entities;
         try {
-            var count = parseInt(body['@odata.count'], 10) || entities.length;
+            let count = parseInt(body['@odata.count'], 10) || entities.length;
             pagedResult.count = count;
         }
         catch (error) {
@@ -95,9 +86,8 @@ var ODataConfiguration = (function () {
             pagedResult.count = entities.length;
         }
         return pagedResult;
-    };
-    return ODataConfiguration;
-}());
+    }
+};
 ODataConfiguration = __decorate([
     core_1.Injectable()
 ], ODataConfiguration);

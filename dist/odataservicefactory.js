@@ -6,21 +6,20 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var core_1 = require("@angular/core");
-var odata_1 = require("./odata");
-var ODataServiceFactory = (function () {
-    function ODataServiceFactory(http, config) {
+const core_1 = require("@angular/core");
+const odata_1 = require("./odata");
+let ODataServiceFactory = class ODataServiceFactory {
+    constructor(http, config) {
         this.http = http;
         this.config = config;
     }
-    ODataServiceFactory.prototype.CreateService = function (typeName, handleError) {
+    CreateService(typeName, handleError) {
         return new odata_1.ODataService(typeName, this.http, this.config);
-    };
-    ODataServiceFactory.prototype.CreateServiceWithOptions = function (typeName, config) {
+    }
+    CreateServiceWithOptions(typeName, config) {
         return new odata_1.ODataService(typeName, this.http, config);
-    };
-    return ODataServiceFactory;
-}());
+    }
+};
 ODataServiceFactory = __decorate([
     core_1.Injectable()
 ], ODataServiceFactory);
