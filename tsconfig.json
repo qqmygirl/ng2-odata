@@ -1,26 +1,10 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "target": "es6",
-    "noImplicitAny": false,
-    "rootDir": "./src",
-    "outDir": "./build",
-    "sourceMap": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "declaration": true
-  },
-  "exclude": [
-    ".vscode",
-    ".git",
-    "build",
-    "node_modules",
-    "src/test"
-  ],
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "atom": {
-    "rewriteTsconfig": false
-  }
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "lib" : ["es2015", "es2015.iterable", "dom"],
+        "outDir": "dist"
+    }
 }
