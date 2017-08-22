@@ -1,10 +1,13 @@
 {
-    "compilerOptions": {
-        "target": "es6",
-        "module": "commonjs",
-        "sourceMap": true,
-        "experimentalDecorators": true,
-        "lib" : ["es2015", "es2015.iterable", "dom"],
-        "outDir": "dist"
-    }
+  "compilerOptions": {
+    "target": "es5",
+    "rootDir": "src",
+    "module": "commonjs",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "lib": ["es2015", "es2015.iterable", "dom"],
+    "outDir": "dist"
+  }
 }
