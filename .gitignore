@@ -24,8 +24,7 @@ coverage
 .lock-wscript
 
 # Compiled scripts
-build
-build-test
+dist
 
 # Compiled binary addons (http://nodejs.org/api/addons.html)
 build/Release
