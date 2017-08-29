@@ -1,15 +1,6 @@
-import {
-    Injectable
-} from '@angular/core';
-import {
-    RequestOptions,
-    Headers,
-    Response
-} from '@angular/http';
-import {
-    PagedResult
-} from './query';
-// import { Location } from '@angular/common';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
+import { PagedResult } from './query';
 
 export class KeyConfigs {
     public filter: string = '$filter';
@@ -53,40 +44,42 @@ export class ODataConfiguration {
 
     handleError(err: any, caught: any): void {
         console.warn('OData error: ', err, caught);
-    };
-
-    get requestOptions(): RequestOptions {
-        return new RequestOptions({
-            body: ''
-        });
-    };
-
-    get postRequestOptions(): RequestOptions {
-        let headers = new Headers({
-            'Content-Type': 'application/json; charset=utf-8'
-        });
-        return new RequestOptions({
-            headers: headers
-        });
     }
 
-    public extractQueryResultData <T> (res: Response): T[] {
+    get requestOptions(): any {
+        return {
+            observe: 'response',
+            body: ''
+        };
+    }
+
+    get postRequestOptions(): any {
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json; charset=utf-8'
+        });
+        return {
+            observe: 'response',
+            headers: headers
+        };
+    }
+
+    public extractQueryResultData <T> (res: HttpResponse<T>): T[] {
         if (res.status <200 || res.status>= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        let body = res.json();
-        let entities: T[] = body.value;
+        let body: T = res.body;
+        let entities: T[] = body['value'];
         return entities;
     }
 
-    public extractQueryResultDataWithCount <T> (res: Response): PagedResult <T> {
+    public extractQueryResultDataWithCount <T> (res: HttpResponse<T>): PagedResult <T> {
         let pagedResult = new PagedResult <T> ();
 
         if (res.status <200 || res.status>= 300) {
             throw new Error('Bad response status: ' + res.status);
         }
-        let body = res.json();
-        let entities: T[] = body.value;
+        let body: T = res.body;
+        let entities: T[] = body['value'];
 
         pagedResult.data = entities;
 

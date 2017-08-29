@@ -1,4 +1,4 @@
-import { URLSearchParams, Http, Response, RequestOptions } from '@angular/http';
+import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
 import { Observable, Operator, Subject } from 'rxjs/Rx';
 import { ODataConfiguration } from './config';
 import { ODataOperation } from './operation';
@@ -14,14 +14,12 @@ export class ODataQuery<T> extends ODataOperation<T> {
     private _skip: number;
     private _orderBy: string;
 
-    constructor(_typeName: string, config: ODataConfiguration, http: Http) {
+    constructor(_typeName: string, config: ODataConfiguration, http: HttpClient) {
         super(_typeName, config, http);
     }
     
-    protected getRequestOptions(): RequestOptions {
-        let options = this.config.requestOptions;
-        options.search = this.getQueryParams();
-        return options;
+    protected getRequestOptions(): HttpParams {
+        return this.getQueryParams();
     }
 
     public Filter(filter: string): ODataQuery<T> {
@@ -46,8 +44,8 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     public Exec(): Observable<Array<T>> {
         let config = this.config;
-        return this.http.get(this.buildResourceURL(), this.getRequestOptions())
-            .map(res => this.extractArrayData(res, config))
+        return this.http.get(this.buildResourceURL(), {params: this.getRequestOptions()})
+            .map((res: HttpResponse<T>) => this.extractArrayData(res, config))
             .catch((err: any, caught: Observable<Array<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);
                 return Observable.throw(err);
@@ -59,8 +57,8 @@ export class ODataQuery<T> extends ODataOperation<T> {
         params.set('$count', 'true'); // OData v4 only
         let config = this.config;
 
-        return this.http.get(this.buildResourceURL(), { search: params })
-            .map(res => this.extractArrayDataWithCount(res, config))
+        return this.http.get(this.buildResourceURL(), { params: params})
+            .map((res: HttpResponse<T>) => this.extractArrayDataWithCount(res, config))
             .catch((err: any, caught: Observable<PagedResult<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);
                 return Observable.throw(err);
@@ -71,7 +69,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
         return this.config.baseUrl + '/' + this._typeName + '/';
     }
 
-    private getQueryParams(): URLSearchParams {
+    private getQueryParams(): HttpParams {
         let params = super.getParams();
         if (this._filter) params.set(this.config.keys.filter, this._filter);
         if (this._top) params.set(this.config.keys.top, this._top.toString());
@@ -80,11 +78,11 @@ export class ODataQuery<T> extends ODataOperation<T> {
         return params;
     }
 
-    private extractArrayData(res: Response, config: ODataConfiguration): Array<T> {
+    private extractArrayData(res: HttpResponse<T>, config: ODataConfiguration): Array<T> {
         return config.extractQueryResultData<T>(res);
     }
 
-    private extractArrayDataWithCount(res: Response, config: ODataConfiguration): PagedResult<T> {
+    private extractArrayDataWithCount(res: HttpResponse<T>, config: ODataConfiguration): PagedResult<T> {
         return config.extractQueryResultDataWithCount<T>(res);
     }
 }

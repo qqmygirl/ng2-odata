@@ -1,12 +1,12 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
 import { ODataService } from './odata';
 import { ODataConfiguration } from './config';
 
 @Injectable()
 export class ODataServiceFactory {
 
-    constructor(private http: Http, private config: ODataConfiguration) {
+    constructor(private http: HttpClient, private config: ODataConfiguration) {
     }
 
     public CreateService<T>(typeName: string, handleError?: (err: any) => any): ODataService<T> {
