@@ -46,23 +46,6 @@ export class ODataConfiguration {
         console.warn('OData error: ', err, caught);
     }
 
-    get requestOptions(): any {
-        return {
-            observe: 'response',
-            body: ''
-        };
-    }
-
-    get postRequestOptions(): any {
-        let headers = new HttpHeaders({
-            'Content-Type': 'application/json; charset=utf-8'
-        });
-        return {
-            observe: 'response',
-            headers: headers
-        };
-    }
-
     public extractQueryResultData <T> (res: HttpResponse<T>): T[] {
         if (res.status <200 || res.status>= 300) {
             throw new Error('Bad response status: ' + res.status);

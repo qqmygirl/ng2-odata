@@ -18,8 +18,20 @@ export class ODataQuery<T> extends ODataOperation<T> {
         super(_typeName, config, http);
     }
     
-    protected getRequestOptions(): HttpParams {
-        return this.getQueryParams();
+    protected getRequestOptions(): Object {
+        return {
+            params: this.getQueryParams(),
+            observe: 'response'
+        };
+    }
+
+    private getQueryParams(): HttpParams {
+        let params = super.getParams();
+        if (this._filter) params.set(this.config.keys.filter, this._filter);
+        if (this._top) params.set(this.config.keys.top, this._top.toString());
+        if (this._skip) params.set(this.config.keys.skip, this._skip.toString());
+        if (this._orderBy) params.set(this.config.keys.orderBy, this._orderBy);
+        return params;
     }
 
     public Filter(filter: string): ODataQuery<T> {
@@ -44,7 +56,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     public Exec(): Observable<Array<T>> {
         let config = this.config;
-        return this.http.get(this.buildResourceURL(), {params: this.getRequestOptions()})
+        return this.http.get(this.buildResourceURL(), this.getRequestOptions())
             .map((res: HttpResponse<T>) => this.extractArrayData(res, config))
             .catch((err: any, caught: Observable<Array<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);
@@ -53,11 +65,11 @@ export class ODataQuery<T> extends ODataOperation<T> {
     }
 
     public ExecWithCount(): Observable<PagedResult<T>> {
-        let params = this.getQueryParams();
-        params.set('$count', 'true'); // OData v4 only
+        let options = this.getRequestOptions();
+        options['params'].set('$count', 'true'); // OData v4 only
         let config = this.config;
 
-        return this.http.get(this.buildResourceURL(), { params: params})
+        return this.http.get(this.buildResourceURL(), options)
             .map((res: HttpResponse<T>) => this.extractArrayDataWithCount(res, config))
             .catch((err: any, caught: Observable<PagedResult<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);
@@ -67,15 +79,6 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     private buildResourceURL(): string {
         return this.config.baseUrl + '/' + this._typeName + '/';
-    }
-
-    private getQueryParams(): HttpParams {
-        let params = super.getParams();
-        if (this._filter) params.set(this.config.keys.filter, this._filter);
-        if (this._top) params.set(this.config.keys.top, this._top.toString());
-        if (this._skip) params.set(this.config.keys.skip, this._skip.toString());
-        if (this._orderBy) params.set(this.config.keys.orderBy, this._orderBy);
-        return params;
     }
 
     private extractArrayData(res: HttpResponse<T>, config: ODataConfiguration): Array<T> {

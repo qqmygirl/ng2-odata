@@ -27,32 +27,16 @@ export abstract class ODataOperation<T> {
         return params;
     }
 
-    protected handleResponse(entity: Observable<HttpResponse<T>>): Observable<T> {
-        return entity.map(this.extractData)
-           .catch((err: any, caught: Observable<T>) => {
-               if (this.config.handleError) this.config.handleError(err, caught);
-               return Observable.throw(err);
-           });
-    }
-
-    private extractData(res: HttpResponse<T>): T {
-        if (res.status < 200 || res.status >= 300) {
-            throw new Error('Bad response status: ' + res.status);
-        }
-        let body: T = res.body;
-        return body || null;
-    }
-
     protected getEntityUri(entityKey: string): string;
     protected getEntityUri(entityKey: string, keyName: string): string;
     protected getEntityUri(entityKey: string, keyName?: string): string {
         return this.config.getEntityUri(this._typeName, entityKey, keyName);
     }
 
-    protected getRequestOptions(): any {
-        let options = this.config.requestOptions;
-        options.params = this.getParams();
-        return options;
+    protected getRequestOptions(): Object {
+        return {
+            params: this.getParams()
+        };
     }
 
     abstract Exec(...args): Observable<any>;
@@ -108,16 +92,15 @@ export abstract class OperationWithAlternateKey<T> extends ODataOperation<T> {
     abstract Exec(...args): Observable<any>;
 }
 
-
 export class GetOperation<T> extends OperationWithKey<T> {
     public Exec(): Observable<T> {
-        return super.handleResponse(this.http.get<T>(this.getEntityUri(this.key), this.getRequestOptions()));
+        return this.http.get<T>(this.getEntityUri(this.key), this.getRequestOptions());
     }
 }
 
 export class GetByAlternateKeyOperation<T> extends OperationWithAlternateKey<T> {
     public Exec(): Observable<T> {
-        return super.handleResponse(this.http.get<T>(this.getEntityUri(this.key, this.keyName), this.getRequestOptions()));
+        return this.http.get<T>(this.getEntityUri(this.key, this.keyName), this.getRequestOptions());
     }
 }
 

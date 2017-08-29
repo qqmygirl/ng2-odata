@@ -1,4 +1,3 @@
-import { ArrayBuffer } from '@angular/http/src/static_request';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable, Operator } from 'rxjs/Rx';
 import { ODataConfiguration} from './config';
@@ -22,8 +21,9 @@ export class ODataService <T> {
     }
 
     public Post(entity: T): Observable <T> {
-        let body = JSON.stringify(entity);
-        return this.handleResponse(this.http.post<T>(this.config.baseUrl + '/' + this.TypeName, body, this.config.postRequestOptions));
+        const body = JSON.stringify(entity);
+        return this.http.post<T>(
+            this.config.baseUrl + '/' + this.TypeName, body);
     }
 
     public CustomFunction(actionName: string): Observable <Object> ;
@@ -34,23 +34,23 @@ export class ODataService <T> {
 
         if (postdata != undefined) {
             let body = JSON.stringify(postdata);
-            return this.http.post(url, body, this.config.requestOptions);
+            return this.http.post(url, body);
         }
-        return this.http.get(url, this.config.requestOptions);
+        return this.http.get(url);
     }
 
     public Patch(entity: any, key: string): Observable <T> {
-        let body = JSON.stringify(entity);
-        return this.handleResponse(this.http.patch<T>(this.getEntityUri(key), body, this.config.postRequestOptions));
+        const body: string = JSON.stringify(entity);
+        return this.http.patch<T>(this.getEntityUri(key), body);
     }
 
     public Put(entity: T, key: string): Observable <T> {
-        let body = JSON.stringify(entity);
-        return this.handleResponse(this.http.put<T>(this.getEntityUri(key), body, this.config.postRequestOptions));
+        const body: string = JSON.stringify(entity);
+        return this.http.put<T>(this.getEntityUri(key), body);
     }
 
     public Delete(key: string): Observable <T> {
-        return this.handleResponse(this.http.delete<T>(this.getEntityUri(key), this.config.requestOptions));
+        return this.http.delete<T>(this.getEntityUri(key));
     }
 
     public Query(): ODataQuery <T> {
@@ -61,14 +61,6 @@ export class ODataService <T> {
     protected getEntityUri(entityKey: string): string;
     protected getEntityUri(entityKey?: string): string {
         return this.config.getEntityUri(this._typeName, entityKey);
-    }
-
-    protected handleResponse(entity: Observable <HttpResponse<T>> ): Observable <T> {
-        return entity.map(this.extractData)
-            .catch((err: any, caught: Observable <T> ) => {
-                if (this.config.handleError) this.config.handleError(err, caught);
-                return Observable.throw(err);
-            });
     }
 
     private extractData(res: HttpResponse<T>): T {
