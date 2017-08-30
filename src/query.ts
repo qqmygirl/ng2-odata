@@ -57,9 +57,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
     public Exec(): Observable<Array<T>> {
         let config = this.config;
         let params = this.getQueryParams();
-        params.keys().forEach(key => {
-            console.log(params.get(key));
-        });
+
         return this.http.get(this.buildResourceURL(), {params: this.getQueryParams(), observe: 'response'})
             .map((res: HttpResponse<T>) => this.extractArrayData(res, config))
             .catch((err: any, caught: Observable<Array<T>>) => {
