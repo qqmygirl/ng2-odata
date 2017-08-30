@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaderResponse, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, Operator, Subject } from 'rxjs/Rx';
 import { ODataConfiguration } from './config';
 import { ODataOperation } from './operation';
@@ -21,11 +21,18 @@ export class ODataQuery<T> extends ODataOperation<T> {
     protected getRequestOptions(): Object {
         return {
             params: this.getQueryParams(),
+            headers: this.getHeaders(),
             observe: 'response'
         };
     }
 
-    private getQueryParams(): HttpParams {
+    protected getHeaders(): HttpHeaders {
+        let headers = super.getHeaders();
+
+        return headers;
+    }
+
+    protected getQueryParams(): HttpParams {
         let params: HttpParams = super.getParams();
         if (this._filter) params = params.set(this.config.keys.filter, this._filter);
         if (this._top) params = params.set(this.config.keys.top, this._top.toString());
@@ -58,7 +65,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
         let config = this.config;
         let params = this.getQueryParams();
 
-        return this.http.get(this.buildResourceURL(), {params: this.getQueryParams(), observe: 'response'})
+        return this.http.get(this.buildResourceURL(), this.getRequestOptions())
             .map((res: HttpResponse<T>) => this.extractArrayData(res, config))
             .catch((err: any, caught: Observable<Array<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);

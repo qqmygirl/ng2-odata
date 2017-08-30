@@ -1,4 +1,5 @@
-import { HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
+import { getHeapSpaceStatistics } from 'v8';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Observable, Operator } from 'rxjs/Rx';
 import { ODataConfiguration } from './config';
 
@@ -7,8 +8,8 @@ export abstract class ODataOperation<T> {
     private _select: string;
 
     constructor(protected _typeName: string,
-                protected config: ODataConfiguration,
-                protected http: HttpClient) { }
+        protected config: ODataConfiguration,
+        protected http: HttpClient) { }
 
     public Expand(expand: string | string[]) {
         this._expand = this.parseStringOrStringArray(expand);
@@ -33,9 +34,18 @@ export abstract class ODataOperation<T> {
         return this.config.getEntityUri(this._typeName, entityKey, keyName);
     }
 
+    protected getHeaders(): HttpHeaders {
+        let headers = new HttpHeaders();
+
+        headers = headers.set('Content-Type', 'application/json');
+
+        return headers;
+    }
+
     protected getRequestOptions(): Object {
         return {
-            params: this.getParams()
+            params: this.getParams(),
+            headers: this.getHeaders()
         };
     }
 
@@ -52,32 +62,32 @@ export abstract class ODataOperation<T> {
 
 export abstract class OperationWithKey<T> extends ODataOperation<T> {
     constructor(protected _typeName: string,
-                protected config: ODataConfiguration,
-                protected http: HttpClient,
-                protected key: string) {
-                    super(_typeName, config, http);
-                }
+        protected config: ODataConfiguration,
+        protected http: HttpClient,
+        protected key: string) {
+        super(_typeName, config, http);
+    }
     abstract Exec(...args): Observable<any>;
 }
 
 export abstract class OperationWithEntity<T> extends ODataOperation<T> {
     constructor(protected _typeName: string,
-                protected config: ODataConfiguration,
-                protected http: HttpClient,
-                protected entity: T) {
-                    super(_typeName, config, http);
-                }
+        protected config: ODataConfiguration,
+        protected http: HttpClient,
+        protected entity: T) {
+        super(_typeName, config, http);
+    }
     abstract Exec(...args): Observable<any>;
 }
 
 export abstract class OperationWithKeyAndEntity<T> extends ODataOperation<T> {
     constructor(protected _typeName: string,
-                protected config: ODataConfiguration,
-                protected http: HttpClient,
-                protected key: string,
-                protected entity: T) {
-                    super(_typeName, config, http);
-                }
+        protected config: ODataConfiguration,
+        protected http: HttpClient,
+        protected key: string,
+        protected entity: T) {
+        super(_typeName, config, http);
+    }
     abstract Exec(...args): Observable<any>;
 }
 
@@ -87,7 +97,7 @@ export abstract class OperationWithAlternateKey<T> extends ODataOperation<T> {
         protected http: HttpClient,
         protected key: string,
         protected keyName: string) {
-            super(_typeName, config, http);
+        super(_typeName, config, http);
     }
     abstract Exec(...args): Observable<any>;
 }
