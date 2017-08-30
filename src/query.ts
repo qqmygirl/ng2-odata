@@ -17,7 +17,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
     constructor(_typeName: string, config: ODataConfiguration, http: HttpClient) {
         super(_typeName, config, http);
     }
-    
+
     protected getRequestOptions(): Object {
         return {
             params: this.getQueryParams(),
@@ -26,11 +26,11 @@ export class ODataQuery<T> extends ODataOperation<T> {
     }
 
     private getQueryParams(): HttpParams {
-        let params = super.getParams();
-        if (this._filter) params.set(this.config.keys.filter, this._filter);
-        if (this._top) params.set(this.config.keys.top, this._top.toString());
-        if (this._skip) params.set(this.config.keys.skip, this._skip.toString());
-        if (this._orderBy) params.set(this.config.keys.orderBy, this._orderBy);
+        let params: HttpParams = super.getParams();
+        if (this._filter) params = params.set(this.config.keys.filter, this._filter);
+        if (this._top) params = params.set(this.config.keys.top, this._top.toString());
+        if (this._skip) params = params.set(this.config.keys.skip, this._skip.toString());
+        if (this._orderBy) params = params.set(this.config.keys.orderBy, this._orderBy);
         return params;
     }
 
@@ -56,7 +56,11 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     public Exec(): Observable<Array<T>> {
         let config = this.config;
-        return this.http.get(this.buildResourceURL(), this.getRequestOptions())
+        let params = this.getQueryParams();
+        params.keys().forEach(key => {
+            console.log(params.get(key));
+        });
+        return this.http.get(this.buildResourceURL(), {params: this.getQueryParams(), observe: 'response'})
             .map((res: HttpResponse<T>) => this.extractArrayData(res, config))
             .catch((err: any, caught: Observable<Array<T>>) => {
                 if (this.config.handleError) this.config.handleError(err, caught);

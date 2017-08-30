@@ -21,9 +21,9 @@ export abstract class ODataOperation<T> {
     }
 
     protected getParams(): HttpParams {
-        let params = new HttpParams();
-        if (this._select && this._select.length > 0) params.set(this.config.keys.select, this._select);
-        if (this._expand && this._expand.length > 0) params.set(this.config.keys.expand, this._expand);
+        let params: HttpParams = new HttpParams();
+        if (this._select && this._select.length > 0) params = params.set(this.config.keys.select, this._select);
+        if (this._expand && this._expand.length > 0) params = params.set(this.config.keys.expand, this._expand);
         return params;
     }
 
