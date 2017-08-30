@@ -23,7 +23,7 @@ export class ODataService <T> {
     public Post(entity: T): Observable <T> {
         const body = JSON.stringify(entity);
         return this.http.post<T>(
-            this.config.baseUrl + '/' + this.TypeName, body);
+            this.config.baseUrl + '/' + this.TypeName, body, this.config.postRequestOptions);
     }
 
     public CustomFunction(actionName: string): Observable <Object> ;
@@ -34,23 +34,23 @@ export class ODataService <T> {
 
         if (postdata != undefined) {
             let body = JSON.stringify(postdata);
-            return this.http.post(url, body);
+            return this.http.post(url, body, this.config.postRequestOptions);
         }
         return this.http.get(url);
     }
 
     public Patch(entity: any, key: string): Observable <T> {
         const body: string = JSON.stringify(entity);
-        return this.http.patch<T>(this.getEntityUri(key), body);
+        return this.http.patch<T>(this.getEntityUri(key), body, this.config.postRequestOptions);
     }
 
     public Put(entity: T, key: string): Observable <T> {
         const body: string = JSON.stringify(entity);
-        return this.http.put<T>(this.getEntityUri(key), body);
+        return this.http.put<T>(this.getEntityUri(key), body, this.config.postRequestOptions);
     }
 
     public Delete(key: string): Observable <T> {
-        return this.http.delete<T>(this.getEntityUri(key));
+        return this.http.delete<T>(this.getEntityUri(key), this.config.postRequestOptions);
     }
 
     public Query(): ODataQuery <T> {
@@ -61,13 +61,5 @@ export class ODataService <T> {
     protected getEntityUri(entityKey: string): string;
     protected getEntityUri(entityKey?: string): string {
         return this.config.getEntityUri(this._typeName, entityKey);
-    }
-
-    private extractData(res: HttpResponse<T>): T {
-        if (res.status <200 || res.status>= 300) {
-            throw new Error('Bad response status: ' + res.status);
-        }
-        let body: any = res.body;
-        return body || null;
     }
 }
