@@ -75,7 +75,7 @@ export class ODataQuery<T> extends ODataOperation<T> {
 
     public ExecWithCount(): Observable<PagedResult<T>> {
         let options = this.getRequestOptions();
-        options['params'].set('$count', 'true'); // OData v4 only
+        options['params'] = options['params'].set('$count', 'true'); // OData v4 only
         let config = this.config;
 
         return this.http.get(this.buildResourceURL(), options)
